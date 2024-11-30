@@ -186,9 +186,9 @@
                 // console.log(k,need)
                 Needed_Coins -= need
             }
-            console.log(Needed_Coins)
-            console.log(card.cost)
-            
+            // console.log(Needed_Coins)
+            // console.log(card.cost)
+            $("#hold-card-btn").removeClass("hidden");
             // console.log(this.data)
             if(game_components.hold_cards[player_turn].length>=2) {
                 $("#hold-card-btn").addClass("opacity-20");
@@ -196,6 +196,7 @@
                 $("#hold-card-btn").removeClass("opacity-20");
             }
             document.querySelector("#confirmation-modal card-component").data = card
+            
             $("#confirmation-modal").toggleClass("flex hidden");
             $("#confirmation-modal card-component > div").removeClass("cursor-pointer hover:scale-105");
             if(game_components.players[player_turn].balance["gold"]<Needed_Coins)$("#confirm-buy").addClass("opacity-20");
@@ -256,14 +257,23 @@
                     let need = Math.min(v+game_components.players[player_turn].owned_mine[k]-card.data.cost[k],0)
                     Needed_Coins -= need
                 }
-                $("#hold-card-btn").removeClass("hidden");
-                if(game_components.players[player_turn].balance["gold"]<Needed_Coins)return
+                if(game_components.players[player_turn].balance["gold"]<Needed_Coins){
+                    $("#confirm-buy").addClass("opacity-20");
+                }
+                else {
+                    $("#confirm-buy").removeClass("opacity-20")
+                }
+                if (player_turn!=Owner)return
                 document.querySelector("#confirmation-modal card-component").data = {...card.data}
+                $("#hold-card-btn").addClass("hidden");
                 $("#confirmation-modal").toggleClass("flex hidden");
                 $("#confirmation-modal card-component > div").removeClass("cursor-pointer hover:scale-105");
-                $("#hold-card-btn").addClass("hidden");
                 document.getElementById('confirm-buy').onclick = function() {
+                    if(game_components.players[player_turn].balance["gold"]<Needed_Coins)return
+                    console.log("Hello")
                     $("#confirmation-modal").toggleClass("flex hidden");
+                    $("#hold-cards-modal").toggleClass("flex hidden");
+
                     for(const [k,v] of Object.entries(game_components.players[player_turn].balance)){
                         if(k=="gold")continue
                         if(game_components.players[player_turn].balance[k]){
