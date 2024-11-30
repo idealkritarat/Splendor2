@@ -178,24 +178,26 @@
             let Tier = parseInt(this.role[this.role.length-3]),
             Card_Index = parseInt(this.role[this.role.length-1]);
             let Needed_Coins = 0
-            let card = this.data
+            let card = this
             // console.log(game_components.players[player_turn].balance)
+            console.log("====== Want to buy cards? =======")
             for(const [k,v] of Object.entries(game_components.players[player_turn].balance)){
                 if(k=="gold")continue
-                let need = Math.min(v+game_components.players[player_turn].owned_mine[k]-card.cost[k],0)
-                // console.log(k,need)
+                let need = Math.min(v+game_components.players[player_turn].owned_mine[k]-card.data.cost[k],0)
+                console.log(k,need)
                 Needed_Coins -= need
             }
-            // console.log(Needed_Coins)
-            // console.log(card.cost)
+            console.log("=================================")
+            console.log(Needed_Coins)
+            // console.log(card.data.cost)
             $("#hold-card-btn").removeClass("hidden");
             // console.log(this.data)
-            if(game_components.hold_cards[player_turn].length>=2) {
+            if(game_components.hold_cards[player_turn].length>=2 || game_components.players[player_turn].balance["gold"]>=2) {
                 $("#hold-card-btn").addClass("opacity-20");
             } else {
                 $("#hold-card-btn").removeClass("opacity-20");
             }
-            document.querySelector("#confirmation-modal card-component").data = card
+            document.querySelector("#confirmation-modal card-component").data = card.data
             
             $("#confirmation-modal").toggleClass("flex hidden");
             $("#confirmation-modal card-component > div").removeClass("cursor-pointer hover:scale-105");
@@ -203,29 +205,30 @@
             else $("#confirm-buy").removeClass("opacity-20")
             document.getElementById('confirm-buy').onclick = function() {
                 if(game_components.players[player_turn].balance["gold"]<Needed_Coins)return
-                draw_a_card(Tier, Card_Index);
                 $("#confirmation-modal").toggleClass("flex hidden");
                 for(const [k,v] of Object.entries(game_components.players[player_turn].balance)){
                     if(k=="gold")continue
-                    if(game_components.players[player_turn].balance[k]){
-                        game_components.players[player_turn].balance[k] -= card.cost[k]-game_components.players[player_turn].owned_mine[k]
-                        game_components.central_money[k] += card.cost[k]-game_components.players[player_turn].owned_mine[k]
-                    }
+                    pay = Math.min(Math.max(card.data.cost[k] - game_components.players[player_turn].owned_mine[k],0),game_components.players[player_turn].balance[k])
+                    game_components.central_money[k] += pay
+                    game_components.players[player_turn].balance[k] -= pay
+                    
                 }
                 game_components.players[player_turn].balance["gold"] -= Needed_Coins
-                game_components.players[player_turn].owned_mine[card.color.toLowerCase()] += 1
-                game_components.players[player_turn].score += card.points
+                game_components.central_money["gold"] += Needed_Coins
+                game_components.players[player_turn].owned_mine[card.data.color.toLowerCase()] += 1
+                game_components.players[player_turn].score += card.data.points
+                draw_a_card(Tier, Card_Index);
                 update_turn()
                 update_coins()
             }
 
             document.getElementById('hold-card-btn').onclick = function() {
-                if(game_components.central_money["gold"]<=0 || game_components.hold_cards[player_turn].length>=2)return
-                draw_a_card(Tier, Card_Index);
+                if(game_components.central_money["gold"]<=0 || game_components.hold_cards[player_turn].length>=2 || game_components.players[player_turn].balance["gold"]==2)return
                 $("#confirmation-modal").toggleClass("flex hidden");
-                game_components.hold_cards[player_turn].push({...card})
+                game_components.hold_cards[player_turn].push({...card.data})
                 game_components.central_money["gold"] -= 1
                 game_components.players[player_turn].balance["gold"] += 1
+                draw_a_card(Tier, Card_Index);
                 update_coins()
                 update_turn()
                 update_hold_cards()
@@ -270,20 +273,22 @@
                 $("#confirmation-modal card-component > div").removeClass("cursor-pointer hover:scale-105");
                 document.getElementById('confirm-buy').onclick = function() {
                     if(game_components.players[player_turn].balance["gold"]<Needed_Coins)return
-                    console.log("Hello")
                     $("#confirmation-modal").toggleClass("flex hidden");
                     $("#hold-cards-modal").toggleClass("flex hidden");
 
                     for(const [k,v] of Object.entries(game_components.players[player_turn].balance)){
                         if(k=="gold")continue
-                        if(game_components.players[player_turn].balance[k]){
-                            game_components.players[player_turn].balance[k] -= card.data.cost[k]-game_components.players[player_turn].owned_mine[k]
-                            game_components.central_money[k] += card.data.cost[k]-game_components.players[player_turn].owned_mine[k]
-                        }
+                        console.log(card.data.cost)
+                        console.log(game_components.players[player_turn].owned_mine)
+                        console.log(game_components.players[player_turn].balance[k])
+                        pay = Math.min(Math.max(card.data.cost[k] - game_components.players[player_turn].owned_mine[k],0),game_components.players[player_turn].balance[k])
+                        game_components.central_money[k] += pay
+                        game_components.players[player_turn].balance[k] -= pay
                     }
                     game_components.players[player_turn].balance["gold"] -= Needed_Coins
+                    game_components.central_money["gold"] += Needed_Coins
                     game_components.players[player_turn].owned_mine[card.data.color.toLowerCase()] += 1
-                    game_components.players[player_turn].score += card.points
+                    game_components.players[player_turn].score += card.data.points
                     game_components.hold_cards[Owner].splice(Card_Index,1)
                     // console.log(card.data)
                     update_hold_cards();
