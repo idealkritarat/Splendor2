@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="w-screen h-screen bg-[#C3E88D] flex">
+        <player-zone-component></player-zone-component>
+        <div class="w-full h-full flex flex-col p-5">
+            <coins-component></coins-component>
+            <div class="w-full h-full flex flex-col">
+                <div class="w-full h-full flex py-2 items-center">
+                    <div class="w-[25%] flex items-center justify-center">
+                        <div class="bg-[#EEE] px-20 py-5 rounded-2xl cursor-pointer" onclick="$('#hold-cards-modal').toggleClass('flex hidden');">Mines</div>
+                    </div>
+                    <div class="w-full flex justify-around px-16">
+                        <king-component></king-component>
+                        <king-component></king-component>
+                        <king-component></king-component>
+                        <king-component></king-component>
+                        <king-component></king-component>
+                    </div>
+                    
+                </div>
+                <div role="tier-3-row" class="w-full h-full flex p-2">
+                    <card-counter-component></card-counter-component>
+                    <div role="card-row" class="w-full h-full flex justify-around">
+                        <card-component></card-component>
+                        <card-component></card-component>
+                        <card-component></card-component>
+                        <card-component></card-component>
+                    </div>
+                    
+                </div>
+                <div role="tier-2-row" class="w-full h-full flex p-2">
+                    <card-counter-component></card-counter-component>
+                    <div role="card-row" class="w-full h-full flex justify-around">
+                        <card-component></card-component>
+                        <card-component></card-component>
+                        <card-component></card-component>
+                        <card-component></card-component>
+                    </div>
+                </div>
+                <div role="tier-1-row" class="w-full h-full flex p-2">
+                    <card-counter-component></card-counter-component>
+                    <div role="card-row" class="w-full h-full flex justify-around">
+                        <card-component></card-component>
+                        <card-component></card-component>
+                        <card-component></card-component>
+                        <card-component></card-component>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal (Alert Box) -->
+    <div id="confirmation-modal" class="z-10 fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+        <div class="bg-white rounded-lg p-8 w-96 flex flex-col gap-5">
+            <h2 class="text-xl font-semibold mb-4">Are you sure you want to buy this card?</h2>
+            <div class="flex w-full items-center justify-center">
+                <card-component></card-component>
+            </div>
+            <div class="flex justify-between">
+                <button id="confirm-buy" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Yes</button>
+                <button id="hold-card-btn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Hold</button>
+                <button id="cancel-buy" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" onclick="$('#confirmation-modal').toggleClass('flex hidden');">No</button>
+            </div>
+        </div>
+    </div>
+    <div id="coin-selection-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 justify-center items-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-[50%] w-full flex flex-col gap-4">
+            <h2 class="text-2xl font-bold mb-4">Select Your Coins</h2>
+            <coins-selection-component></coins-selection-component>
+            <coins-selected-component></coins-selected-component>
+            <div class="flex justify-between">
+                <button id="confirm-selection" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                    Confirm
+                </button>
+                <button id="cancel-selection" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="hold-cards-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 justify-center items-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-[50%] w-full flex flex-col gap-4">
+            <h2 class="text-2xl font-bold mb-4">Mines</h2>
+            <div class="flex flex-col items-center gap-10">
+                <div class="flex gap-10">
+                    <div class="flex flex-col items-center gap-2">
+                        <h1 class="font-bold text-[20px]">Player 1</h1>
+                        <div class="flex gap-5 items-center justify-center" id="hold-cards-player-0">
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <h1 class="font-bold text-[20px]">Player 2</h1>
+                        <div class="flex gap-5 items-center justify-center" id="hold-cards-player-1">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-10">
+                    <div class="flex flex-col items-center gap-2">
+                        <h1 class="font-bold text-[20px]">Player 3</h1>
+                        <div class="flex gap-5 items-center justify-center" id="hold-cards-player-2">
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <h1 class="font-bold text-[20px]">Player 4</h1>
+                        <div class="flex gap-5 items-center justify-center" id="hold-cards-player-3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end">
+                <button id="cancel-buy-hold" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" onclick="$('#hold-mines-modal').toggleClass('flex hidden');">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/kings.js"></script>
+    <script src="assets/js/cards.js"></script>
+    <script src="assets/js/card-counters.js"></script>
+    <script src="assets/js/players.js"></script>
+    <script src="assets/js/game.js"></script>
+    <script src="assets/js/selected_coins.js"></script>
+    <script src="assets/js/coins.js"></script>
+    <script>
+        function popAnElementFromSet(set) {
+            const setArray = Array.from(set);
+            const randomIndex = Math.floor(Math.random() * setArray.length);
+            set.delete(setArray[randomIndex])
+            return setArray[randomIndex];
+        }
+
+        for(let tier=1;tier<=3;++tier){
+            for(let i=0;i<4;++i){
+                draw_a_card(tier,i);
+                document.querySelectorAll('div[role=tier-'+tier+'-row] card-component')[i].role = "card_tier-"+tier+"-"+i
+            }
+        }
+
+        for(let player=0;player<4;++player){
+            if(player>=number_of_player) document.querySelectorAll("player-component")[player].data = {player_index: -1}
+            else document.querySelectorAll("player-component")[player].data = {
+                player_index: player,
+                balance: { black: 0, white: 0, red: 0, blue: 0, green: 0, gold: 0 },
+                owned_mine: { black: 0, white: 0, red: 0, blue: 0, green: 0, gold: 0 },
+                score: 0
+            }
+        }
+
+        update_card_counter();
+        update_turn();
+        update_coins();
+        document.querySelector("coins-selected-component").data = {
+            central_money: {
+                black: 0,
+                white: 0,
+                red: 0,
+                blue: 0,
+                green: 0,
+                gold: 0,
+            }
+        }
+        reset_selected_coins();
+        update_hold_cards();
+
+        // buy cards
+        $("div[role=card-row] card-component").click(function (e) { 
+            let Tier = parseInt(this.role[this.role.length-3]),
+            Card_Index = parseInt(this.role[this.role.length-1]);
+            let Needed_Coins = 0
+            let card = this.data
+            // console.log(game_components.players[player_turn].balance)
+            for(const [k,v] of Object.entries(game_components.players[player_turn].balance)){
+                if(k=="gold")continue
+                let need = Math.min(v+game_components.players[player_turn].owned_mine[k]-card.cost[k],0)
+                // console.log(k,need)
+                Needed_Coins -= need
+            }
+            console.log(Needed_Coins)
+            console.log(card.cost)
+            
+            // console.log(this.data)
+            if(game_components.hold_cards[player_turn].length>=2) {
+                $("#hold-card-btn").addClass("opacity-20");
+            } else {
+                $("#hold-card-btn").removeClass("opacity-20");
+            }
+            document.querySelector("#confirmation-modal card-component").data = card
+            $("#confirmation-modal").toggleClass("flex hidden");
+            $("#confirmation-modal card-component > div").removeClass("cursor-pointer hover:scale-105");
+            if(game_components.players[player_turn].balance["gold"]<Needed_Coins)$("#confirm-buy").addClass("opacity-20");
+            else $("#confirm-buy").removeClass("opacity-20")
+            document.getElementById('confirm-buy').onclick = function() {
+                if(game_components.players[player_turn].balance["gold"]<Needed_Coins)return
+                draw_a_card(Tier, Card_Index);
+                $("#confirmation-modal").toggleClass("flex hidden");
+                for(const [k,v] of Object.entries(game_components.players[player_turn].balance)){
+                    if(k=="gold")continue
+                    if(game_components.players[player_turn].balance[k]){
+                        game_components.players[player_turn].balance[k] -= card.cost[k]-game_components.players[player_turn].owned_mine[k]
+                        game_components.central_money[k] += card.cost[k]-game_components.players[player_turn].owned_mine[k]
+                    }
+                }
+                game_components.players[player_turn].balance["gold"] -= Needed_Coins
+                game_components.players[player_turn].owned_mine[card.color.toLowerCase()] += 1
+                game_components.players[player_turn].score += card.points
+                update_turn()
+                update_coins()
+            }
+
+            document.getElementById('hold-card-btn').onclick = function() {
+                if(game_components.central_money["gold"]<=0 || game_components.hold_cards[player_turn].length>=2)return
+                draw_a_card(Tier, Card_Index);
+                $("#confirmation-modal").toggleClass("flex hidden");
+                game_components.hold_cards[player_turn].push({...card})
+                game_components.central_money["gold"] -= 1
+                game_components.players[player_turn].balance["gold"] += 1
+                update_coins()
+                update_turn()
+                update_hold_cards()
+            }
+
+            document.getElementById('cancel-buy').onclick = function() {
+                $("#confirmation-modal").toggleClass("flex hidden");
+            }
+        });
+
+        function update_hold_cards(){
+            for(let player=0;player<number_of_player;++player){
+                document.getElementById("hold-cards-player-"+player).innerHTML = ''
+                for(card in game_components.hold_cards[player]){
+                    newCard = document.createElement("card-component");
+                    newCard.data = {...game_components.hold_cards[player][card]}
+                    newCard.id = "hold-cards-player-"+player+"-"+card
+                    document.getElementById("hold-cards-player-"+player).appendChild(newCard)
+                }
+            }
+
+            $("div#hold-cards-modal card-component").click(function (e) { 
+                let Owner = parseInt(this.id[this.id.length-3]),
+                Card_Index = parseInt(this.id[this.id.length-1]);
+                let Needed_Coins = 0
+                let card = this
+                for(const [k,v] of Object.entries(game_components.players[player_turn].balance)){
+                    if(k=="gold")continue
+                    let need = Math.min(v+game_components.players[player_turn].owned_mine[k]-card.data.cost[k],0)
+                    Needed_Coins -= need
+                }
+                $("#hold-card-btn").removeClass("hidden");
+                if(game_components.players[player_turn].balance["gold"]<Needed_Coins)return
+                document.querySelector("#confirmation-modal card-component").data = {...card.data}
+                $("#confirmation-modal").toggleClass("flex hidden");
+                $("#confirmation-modal card-component > div").removeClass("cursor-pointer hover:scale-105");
+                $("#hold-card-btn").addClass("hidden");
+                document.getElementById('confirm-buy').onclick = function() {
+                    $("#confirmation-modal").toggleClass("flex hidden");
+                    for(const [k,v] of Object.entries(game_components.players[player_turn].balance)){
+                        if(k=="gold")continue
+                        if(game_components.players[player_turn].balance[k]){
+                            game_components.players[player_turn].balance[k] -= card.data.cost[k]-game_components.players[player_turn].owned_mine[k]
+                            game_components.central_money[k] += card.data.cost[k]-game_components.players[player_turn].owned_mine[k]
+                        }
+                    }
+                    game_components.players[player_turn].balance["gold"] -= Needed_Coins
+                    game_components.players[player_turn].owned_mine[card.data.color.toLowerCase()] += 1
+                    game_components.players[player_turn].score += card.points
+                    game_components.hold_cards[Owner].splice(Card_Index,1)
+                    // console.log(card.data)
+                    update_hold_cards();
+                    update_turn()
+                    update_coins()
+                    card.update()
+                }
+            });
+
+        }
+        
+        document.getElementById('cancel-buy-hold').onclick = function() {$('#hold-cards-modal').toggleClass('flex hidden');}
+
+        // select coins
+        $("#central-coin-row").click(function (e) { 
+            $("#coin-selection-modal").toggleClass("flex hidden");
+            document.getElementById('confirm-selection').onclick = function() {
+                game_components.central_money = document.querySelector("coins-selection-component").data.central_money
+                for( i in document.querySelector("coins-selection-component").data.central_money){
+                    game_components.players[player_turn].balance[i]+= document.querySelector("coins-selected-component").data.central_money[i]
+                }
+                $("#coin-selection-modal").toggleClass("flex hidden");
+                reset_selected_coins()
+                update_turn()
+                
+            }
+            document.getElementById('cancel-selection').onclick = function() {
+                $("#coin-selection-modal").toggleClass("flex hidden");
+                reset_selected_coins()
+            }
+        });
+        
+        
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/noumanqamar450/alertbox@main/version/1.0.2/alertbox.min.js"></script>
+</body>
+</html>
