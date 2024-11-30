@@ -36,6 +36,7 @@ class CoinsSelected extends HTMLElement {
         this.id = "coin-selected-area"
         this.innerHTML = ``
         for(const [k,v] of Object.entries(central_money)){
+            if(k=="gold")continue
             this.innerHTML += `
                 <div class="w-full h-full grid place-items-center">
                     <div role="selected-coin" id="central-coin-selected-${k}" class="size-24 bg-[${k}] rounded-full grid place-items-center border-[2px] border-black cursor-pointer">
